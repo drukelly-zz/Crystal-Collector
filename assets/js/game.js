@@ -39,10 +39,9 @@ $(function(){
     difference = Math.round(difference/gems.length);
     /*
       The display score will pick an integer
-      from 23 - 86. The difference of that is 63.
-      When divided by gems.length, the result is 10.5.
+      from const `min` - `max`. The difference
+      will be divided by the gems.length
       
-      Assign a random number from 1 to 11.
       Then distribute random points to each gem blindly
 
       Note: Will tweak the point distribution after
@@ -89,4 +88,5 @@ $(function(){
     updateScore(hp);
     console.log(hp);
   });
+  
 });
