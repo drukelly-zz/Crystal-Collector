@@ -6,8 +6,14 @@ $(function(){
   const max = 86;
   const gems = ["aqua", "blue", "emerald", "orange", "purple", "red"];
 
-  // Functions
-  // Shuffle color array
+  // Helper Functions
+  // Randomize Integers with inclusive scope
+  const randomInt = (min, max) => {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
+  // Shuffle Array
   // Based on the Fisher-Yates shuffle algorithm
   // https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array
   const shuffle = (array) => {
@@ -23,6 +29,8 @@ $(function(){
     Array.from(array);
     return array;
   }
+
+  // Game Functions
   const buildGems = (array, min, max) => {
     // Shuffle per call of the function
     shuffle(array);
@@ -40,24 +48,25 @@ $(function(){
       Note: Will tweak the point distribution after
       testing gameplay
     */
-   for (let i = 0; i < gems.length; i++) {
-     let points = randomInt(1, difference);
-     randomPoints.push(points);
-   }
-   for (let j = 0; j < randomPoints.length; j++) {
+    // Build points array 
+    for (let i = 0; i < gems.length; i++) {
+      let points = randomInt(1, difference);
+      randomPoints.push(points);
+    }
+    //  Build gems template
+    for (let j = 0; j < randomPoints.length; j++) {
       let template = `
-        <li class="gem-container col-4 d-flex flex-column justify-content-center my-5 text-center">
-          <a href="#" class="gem" data-hp=${randomPoints[j]}>
-            <img src="assets/images/${array[j]}.svg">
-          </a>
-        </li>`;
+          <li class="gem-container col-4 d-flex flex-column justify-content-center my-5 text-center">
+            <a href="#" class="gem" data-hp=${randomPoints[j]}>
+              <img src="assets/images/${array[j]}.svg">
+            </a>
+          </li>`;
       $("#gems").append(template);
     }
   }
-  const randomInt = (min, max) => {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min;
+  const updateScore = (hp) => {
+    displayedScore = displayedScore - hp;
+    $("#randomScore").text(displayedScore);
   }
 
   // Display Score
@@ -70,6 +79,8 @@ $(function(){
   // Click Handler
   $(".gem").on("click", (event) => {
     event.preventDefault();
-    console.log(event.currentTarget.dataset.hp);
+    let hp = event.currentTarget.dataset.hp;
+    updateScore(hp);
+    console.log(hp);
   });
 });
