@@ -2,7 +2,7 @@ $(function(){
 
   // Variables (Game Settings)
   let displayedScore;
-  const min = 23;
+  const min = 12;
   const max = 86;
   const gems = ["aqua", "blue", "emerald", "orange", "purple", "red"];
 
@@ -59,11 +59,13 @@ $(function(){
           <li class="gem-container col-4 d-flex flex-column justify-content-center my-5 text-center">
             <a href="#" class="gem" data-hp=${randomPoints[j]}>
               <img src="assets/images/${array[j]}.svg">
+              <span class="badge badge-pill badge-danger">– ${randomPoints[j]}</span>
             </a>
           </li>`;
       $("#gems").append(template);
     }
   }
+  // Update Score
   const updateScore = (hp) => {
     displayedScore = displayedScore - hp;
     $("#randomScore").text(displayedScore);
@@ -79,6 +81,10 @@ $(function(){
   // Click Handler
   $(".gem").on("click", (event) => {
     event.preventDefault();
+    $(event.currentTarget).addClass("active");
+    setTimeout(() => {
+      $(event.currentTarget).removeClass("active");
+    }, 501);
     let hp = event.currentTarget.dataset.hp;
     updateScore(hp);
     console.log(hp);
