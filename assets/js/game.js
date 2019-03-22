@@ -1,7 +1,7 @@
 $(function(){
 
   // Variables (Game Settings)
-  let displayedScore;
+  let displayedScore, losses, wins;
   const min = 12;
   const max = 86;
   const gems = ["aqua", "blue", "emerald", "orange", "purple", "red"];
