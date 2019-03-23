@@ -1,7 +1,10 @@
 $(function(){
 
   // Variables (Game Settings)
-  let displayedScore, losses, wins;
+  let displayedScore,
+      losses = 0,
+      maxWins = 5,
+      wins = 0;
   const min = 12;
   const max = 86;
   const gems = ["aqua", "blue", "emerald", "orange", "purple", "red"];
@@ -62,6 +65,45 @@ $(function(){
             </a>
           </li>`;
       $("#gems").append(template);
+      let gem = document.querySelectorAll(".gem")[j];
+      // .on("click") does not work after the first round
+      gem.addEventListener("click", (event) => {
+        event.preventDefault();
+        $(event.currentTarget).addClass("active");
+        // TODO removeClass("active")
+        let hp = event.currentTarget.dataset.hp;
+        updateScore(hp);
+        //
+        if (displayedScore === 0) {
+          ++wins;
+          $("#scorePlayer").text(wins);
+          setTimeout(() => reset(), 250);
+        }
+        //
+        if (displayedScore < 0) {
+          ++losses;
+          $("#scoreCPU").text(losses);
+          setTimeout(() => reset(), 250);
+        }
+        //
+        if (wins === maxWins) {
+          wins = 0;
+          losses = 0;
+          $("#scorePlayer").text(wins);
+          $("#scoreCPU").text(losses);
+          alert("You Win!");
+          reset();
+        }
+        //
+        if (losses === maxWins) {
+          wins = 0;
+          losses = 0;
+          $("#scorePlayer").text(wins);
+          $("#scoreCPU").text(losses);
+          alert("You Lose!");
+          reset();
+        }
+      });
     }
   }
   // Update Score
@@ -69,24 +111,19 @@ $(function(){
     displayedScore = displayedScore - hp;
     $("#randomScore").text(displayedScore);
   }
+  // Reset
+  const reset = () => {
+    $("#randomScore").text("--");
+    displayedScore = randomInt(min, max);
+    $("#randomScore").text(displayedScore);
+    $("#gems").empty();
+    buildGems(gems, min, max);
+  }
 
-  // Display Score
+  // Display Score: First Pass
   displayedScore = randomInt(min, max);
   $("#randomScore").text(displayedScore);
 
-  // Call Functions
+  // Game Init
   buildGems(gems, min, max);
-
-  // Click Handler
-  $(".gem").on("click", (event) => {
-    event.preventDefault();
-    $(event.currentTarget).addClass("active");
-    setTimeout(() => {
-      $(event.currentTarget).removeClass("active");
-    }, 501);
-    let hp = event.currentTarget.dataset.hp;
-    updateScore(hp);
-    console.log(hp);
-  });
-  
 });
