@@ -70,7 +70,9 @@ $(function(){
       gem.addEventListener("click", (event) => {
         event.preventDefault();
         $(event.currentTarget).addClass("active");
-        // TODO removeClass("active")
+        // 
+        // TODO removeClass("active"). Possible?
+        // 
         let hp = event.currentTarget.dataset.hp;
         updateScore(hp);
         //
