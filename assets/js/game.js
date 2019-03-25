@@ -1,13 +1,15 @@
 $(function(){
 
   // Variables (Game Settings)
-  let displayedScore,
+  let animationDuration = 500,
+      isClicked,
+      displayedScore,
       losses = 0,
       maxWins = 5,
       wins = 0;
-  const min = 12;
-  const max = 86;
-  const gems = ["aqua", "blue", "emerald", "orange", "purple", "red"];
+  const MIN = 12;
+  const MAX = 86;
+  const GEMS = ["aqua", "blue", "emerald", "orange", "purple", "red"];
 
   // Helper Functions
   // Randomize Integers with inclusive scope
@@ -39,7 +41,7 @@ $(function(){
     shuffle(array);
     let randomPoints = [];
     let difference = Math.round(max - min);
-    difference = Math.round(difference/gems.length);
+    difference = Math.round(difference/GEMS.length);
     /*
       The display score will pick an integer
       from const `min` - `max`. The difference
@@ -51,7 +53,7 @@ $(function(){
       testing gameplay
     */
     // Build points array 
-    for (let i = 0; i < gems.length; i++) {
+    for (let i = 0; i < GEMS.length; i++) {
       let points = randomInt(1, difference);
       randomPoints.push(points);
     }
@@ -66,28 +68,31 @@ $(function(){
           </li>`;
       $("#gems").append(template);
       let gem = document.querySelectorAll(".gem")[j];
-      // .on("click") does not work after the first round
       gem.addEventListener("click", (event) => {
         event.preventDefault();
-        $(event.currentTarget).addClass("active");
-        // 
-        // TODO removeClass("active"). Possible?
-        // 
+        isClicked = true;
+        if (isClicked === true) {
+          $(event.currentTarget).addClass("active");
+        }
+        isClicked = false;
+        setTimeout(() => {
+          $(".gem").removeClass("active");
+        }, animationDuration+1);
         let hp = event.currentTarget.dataset.hp;
         updateScore(hp);
-        //
+        // if randomized score is exactly 0
         if (displayedScore === 0) {
           ++wins;
           $("#scorePlayer").text(wins);
-          setTimeout(() => reset(), 250);
+          setTimeout(() => reset(), animationDuration);
         }
-        //
+        // if player exceeds less than 0
         if (displayedScore < 0) {
           ++losses;
           $("#scoreCPU").text(losses);
-          setTimeout(() => reset(), 250);
+          setTimeout(() => reset(), animationDuration);
         }
-        //
+        // reset after player wins
         if (wins === maxWins) {
           wins = 0;
           losses = 0;
@@ -96,7 +101,7 @@ $(function(){
           alert("You Win!");
           reset();
         }
-        //
+        // reset after CPU wins
         if (losses === maxWins) {
           wins = 0;
           losses = 0;
@@ -116,16 +121,16 @@ $(function(){
   // Reset
   const reset = () => {
     $("#randomScore").text("--");
-    displayedScore = randomInt(min, max);
+    displayedScore = randomInt(MIN, MAX);
     $("#randomScore").text(displayedScore);
     $("#gems").empty();
-    buildGems(gems, min, max);
+    buildGems(GEMS, MIN, MAX);
   }
 
   // Display Score: First Pass
-  displayedScore = randomInt(min, max);
+  displayedScore = randomInt(MIN, MAX);
   $("#randomScore").text(displayedScore);
 
   // Game Init
-  buildGems(gems, min, max);
+  buildGems(GEMS, MIN, MAX);
 });
