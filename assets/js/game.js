@@ -1,5 +1,4 @@
 $(function(){
-
   // Variables (Game Settings)
   let animationDuration = 500,
       isClicked,
